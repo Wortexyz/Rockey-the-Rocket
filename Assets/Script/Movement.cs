@@ -5,15 +5,24 @@ using UnityEngine.InputSystem;
 
 public class Movement : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] InputAction thrust;
+   private  Rigidbody rb;
+    [SerializeField] float force=10f;
+
+    private void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
+    }
+    private void OnEnable()
+    {
+        thrust.Enable();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+        if (thrust.IsPressed())
+        {
+            rb.AddRelativeForce(Vector3.up * force);
+;        }
     }
 }
