@@ -6,8 +6,9 @@ using UnityEngine.InputSystem;
 public class Movement : MonoBehaviour
 {
     [SerializeField] InputAction thrust;
+    [SerializeField] InputAction rotation;
    private  Rigidbody rb;
-    [SerializeField] float force=10f;
+    [SerializeField] float force=10f, RotationForce = 10f;
 
     private void Start()
     {
@@ -16,13 +17,35 @@ public class Movement : MonoBehaviour
     private void OnEnable()
     {
         thrust.Enable();
+        rotation.Enable();
     }
 
-    private void Update()
+    private void FixedUpdate()
+
+    {
+        InputActions();
+    }
+
+    private void InputActions()
     {
         if (thrust.IsPressed())
         {
-            rb.AddRelativeForce(Vector3.up * force);
-;        }
+            rb.AddRelativeForce(Vector3.up * force * Time.fixedDeltaTime);
+           
+           
+        }
+        if (rotation.IsPressed())
+        {
+            float rotationInput = rotation.ReadValue<float>();
+            Debug.Log("Current Rotation is " + rotationInput);
+            if (rotationInput > 0.0f)
+            {
+                transform.Rotate(0, 0, -RotationForce * Time.fixedDeltaTime);
+            }
+            else if (rotationInput < 0.0f)
+            {
+                transform.Rotate(0, 0, RotationForce * Time.fixedDeltaTime);
+            }
+        }
     }
 }
