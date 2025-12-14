@@ -40,12 +40,17 @@ public class Movement : MonoBehaviour
             Debug.Log("Current Rotation is " + rotationInput);
             if (rotationInput > 0.0f)
             {
-                transform.Rotate(0, 0, -RotationForce * Time.fixedDeltaTime);
+                RotationProcess(-RotationForce);
             }
             else if (rotationInput < 0.0f)
             {
-                transform.Rotate(0, 0, RotationForce * Time.fixedDeltaTime);
+                RotationProcess( RotationForce);
             }
         }
+    }
+
+    private void RotationProcess( float forceToRotate)
+    {
+        transform.Rotate(0, 0, forceToRotate * Time.fixedDeltaTime);
     }
 }
