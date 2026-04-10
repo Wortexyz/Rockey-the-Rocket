@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,10 +10,11 @@ public class Movement : MonoBehaviour
     [SerializeField] InputAction rotation;
    private  Rigidbody rb;
     [SerializeField] float force=10f, RotationForce = 10f;
-
+    AudioSource ThrustAudio;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+       ThrustAudio = GetComponent<AudioSource>();   
     }
     private void OnEnable()
     {
@@ -31,8 +33,16 @@ public class Movement : MonoBehaviour
         if (thrust.IsPressed())
         {
             rb.AddRelativeForce(Vector3.up * force * Time.fixedDeltaTime);
+           if(!ThrustAudio.isPlaying)
+            {
+                ThrustAudio.Play();
+            }
            
-           
+        }
+
+        else
+        {
+            ThrustAudio.Stop();
         }
         if (rotation.IsPressed())
         {
@@ -44,13 +54,15 @@ public class Movement : MonoBehaviour
             }
             else if (rotationInput < 0.0f)
             {
-                RotationProcess( RotationForce);
+                RotationProcess(RotationForce);
             }
         }
     }
 
     private void RotationProcess( float forceToRotate)
     {
+        rb.freezeRotation = true;
         transform.Rotate(0, 0, forceToRotate * Time.fixedDeltaTime);
+        rb.freezeRotation= false;
     }
 }
